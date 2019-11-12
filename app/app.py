@@ -3,6 +3,7 @@ from flask_restplus import Resource, Api
 
 from model import db
 from controller.user import user_api
+from controller.pic import pic_api
 from config import server_config
 
 app = Flask(__name__)
@@ -18,6 +19,7 @@ server_api = Api(app, version='1.0.0', title='adapt-app', doc='/doc/')
 
 # add namespaces (controllers) here
 server_api.add_namespace(user_api)
+server_api.add_namespace(pic_api)
 
 
 @server_api.route('/hello')

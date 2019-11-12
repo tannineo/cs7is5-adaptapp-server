@@ -75,3 +75,25 @@ class UserLogout(Resource):
     @user_api.doc('user_logout')
     def get():
         return {'msg': 'OK'}
+
+
+@user_api.route('/config')
+class UserConfig(Resource):
+    @user_api.doc('user_config')
+    def get():
+        return {'msg': 'OK'}
+
+    @user_api.doc('user_config_update')
+    def post():
+        return {'msg': 'OK'}
+
+
+@user_api.route('/tags')
+class UserTags(Resource):
+    @user_api.doc('tags_list')
+    def get():
+        return {'msg': 'OK'}
+
+    @user_api.doc('update_favorite_tags')
+    def post():
+        return {'msg': 'OK'}

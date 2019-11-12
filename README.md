@@ -17,6 +17,7 @@ To install the whole dependencies:
 
 ```bash
 pipenv install
+pipenv install --dev # for dev dependencies
 ```
 
 To exit the environment:
