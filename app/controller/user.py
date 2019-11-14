@@ -1,6 +1,5 @@
 from flask import request
 from flask_restplus import Namespace, Resource, fields
-from mongoengine.errors import ValidationError
 
 from service.user import create_user
 
@@ -40,11 +39,8 @@ class UserRegister(Resource):
                                 password=json['password_not_hashed'],
                                 email=json['email'])
             # register service
-        except AssertionError as error:
-            # special error management on errors from mongoengine
-            return {'msg': error}, 500  # specify the error code
-        except RuntimeError as error:
-            return {'msg': error}, 500
+        except Exception as e:
+            return {'msg': str(e)}, 500  # specify the error code
         else:
             pass
 
