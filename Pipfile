@@ -12,6 +12,7 @@ rope = "*"
 flask-restplus = "*"
 flask = "*"
 flask-mongoengine = "*"
+redis = "*"
 
 [requires]
 python_version = "3.7"
