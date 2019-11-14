@@ -1,7 +1,7 @@
 from flask import request
 from flask_restplus import Namespace, Resource, fields
 
-from service.user import create_user
+from service.user import create_user, user_login
 
 user_api = Namespace(
     'user',
@@ -23,7 +23,7 @@ class UserRegister(Resource):
         json = request.get_json()
 
         try:
-            """validate req data"""
+            # validate the request data
             error = None
 
             if not json['username']:
@@ -34,11 +34,10 @@ class UserRegister(Resource):
                 error = 'Email is required.'
 
             if error is None:
-                """service logic"""
-            error = create_user(username=json['username'],
-                                password=json['password_not_hashed'],
-                                email=json['email'])
-            # register service
+                # service logic
+                error = create_user(username=json['username'],
+                                    password=json['password_not_hashed'],
+                                    email=json['email'])
         except Exception as e:
             return {'msg': str(e)}, 500  # specify the error code
         else:
@@ -52,7 +51,7 @@ login_fields = user_api.model(
         'username':
         fields.String(required=True, description='username'),
         'password_not_hashed':
-        fields.String(required=True, description='password'),
+        fields.String(required=True, description='password_not_hashed'),
     })
 
 
@@ -61,9 +60,27 @@ class UserLogin(Resource):
     @user_api.doc('user_login', body=login_fields)
     def post(self):
         json = request.get_json()
-        print(json)
 
-        return {'msg': 'OK'}
+        try:
+            # validate the request data
+            error = None
+
+            if not json['username']:
+                error = 'Username is required.'
+            elif not json['password_not_hashed']:
+                error = 'Password is required.'
+
+            if error is None:
+                # service logic
+                token = user_login(
+                    username=json['username'],
+                    password_not_hashed=json['password_not_hashed'])
+        except Exception as e:
+            return {'msg': str(e)}, 500  # specify the error code
+        else:
+            pass
+
+        return {'msg': 'OK', 'result': {'token': token}}
 
 
 @user_api.route('/logout')
