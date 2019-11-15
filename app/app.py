@@ -11,7 +11,9 @@ app = Flask(__name__)
 app.config['MONGODB_SETTINGS'] = {
     'db': server_config.get('mongo', 'db'),
     'host': server_config.get('mongo', 'host'),
-    'port': int(server_config.get('mongo', 'port'))
+    'port': int(server_config.get('mongo', 'port')),
+    'username': server_config.get('mongo', 'username'),
+    'password': server_config.get('mongo', 'password'),
 }
 db.init_app(app)
 
