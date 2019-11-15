@@ -48,6 +48,7 @@ def create_user(username, password_not_hashed, email):
     user.username = username
     user.password = hashed_password
     user.email = email
+    user.tags = []
     user.save()
 
     current_app.logger.info('create user with id:' + str(user.id))
