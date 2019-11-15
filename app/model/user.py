@@ -15,7 +15,7 @@ class User(db.Document):
     roles = db.ListField(db.StringField(), default=[UserRole.USER.value])
 
     # user prefered tags
-    tags = db.ListField(db.StringField(), required=True, default=[])
+    tags = db.ListField(db.StringField(), default=[])
 
     # force settings
     force_pic_config = db.StringField(default=ForcePicConfig.DEFAULT.value)
