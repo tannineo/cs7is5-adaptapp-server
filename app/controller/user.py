@@ -60,11 +60,21 @@ class UserLogin(Resource):
             raise RuntimeError('Password is required.')
 
         # service logic
-        token, tags = user_service.user_login(
+        token, tags, force_pic_config = user_service.user_login(
             username=json['username'],
             password_not_hashed=json['password_not_hashed'])
 
-        return {'msg': 'OK', 'result': {'token': token, 'tags': tags}}
+        network_status = user_service.user_network_status(g.user_id)
+
+        return {
+            'msg': 'OK',
+            'result': {
+                'token': token,
+                'tags': tags,
+                'force_pic_config': force_pic_config,
+                'network_status': network_status
+            }
+        }
 
 
 user_logout_parser = user_api.parser()
@@ -91,7 +101,17 @@ class UserConfig(Resource):
     @user_api.doc('user_config')
     @login_required()
     def get(self):
-        return {'msg': 'OK'}
+
+        force_pic_config = g.user.force_pic_config
+        network_status = user_service.user_network_status(g.user_id)
+
+        return {
+            'msg': 'OK',
+            'result': {
+                'force_pic_config': force_pic_config,
+                'network_status': network_status
+            }
+        }
 
     @user_api.doc('user_config_update')
     @login_required()

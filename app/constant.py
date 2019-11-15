@@ -18,3 +18,10 @@ class TagRecommendRanking(Enum):
     STAR3 = 3
     STAR4 = 4
     STAR5 = 5
+
+
+class UserNetworkSetting(Enum):
+    UNKNOWN = 'unknown'
+    WIFI = 'wifi'
+    CELL = 'cell'
+    CABLE = 'cable'

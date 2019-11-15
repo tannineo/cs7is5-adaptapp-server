@@ -1,10 +1,12 @@
-from flask import current_app
+from flask import current_app, g
 
 from common import md5
+from constant import UserNetworkSetting
 from model.user import User
 from model.tag import Tag
 from config import server_config
 from cache.token import add_token, remove_token, get_token
+import cache.network as cache_network
 
 SECRET = server_config.get('server', 'secret')
 
@@ -73,8 +75,21 @@ def user_login(username, password_not_hashed):
     # generate the new token
     token = add_token(login_user_id, login_user.username)
     tags = login_user.tags
+    force_pic_config = login_user.force_pic_config
 
-    return token, tags
+    g.user = login_user
+    g.user_id = str(login_user.id)
+
+    return token, tags, force_pic_config
+
+
+def user_network_status(user_id):
+    # network_status
+    network_status = cache_network.get_network_settings(user_id)
+    if not network_status:
+        network_status = UserNetworkSetting.UNKNOWN.value
+
+    return network_status
 
 
 def user_logout(user_id):
