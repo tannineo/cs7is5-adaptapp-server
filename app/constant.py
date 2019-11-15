@@ -25,3 +25,11 @@ class UserNetworkSetting(Enum):
     WIFI = 'wifi'
     CELL = 'cell'
     CABLE = 'cable'
+
+
+# judge if a value is in a Enum
+def isInEnum(value, enumerate: Enum):
+    values = tuple(item.value for item in enumerate)
+    if value in values:
+        return True
+    return False
