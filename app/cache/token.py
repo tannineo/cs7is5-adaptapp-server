@@ -18,7 +18,7 @@ def get_user_token(user_id, username):
 
 
 def add_token(user_id, username, expire=2592000):
-    token = str(jwt.encode(get_user_token(user_id, username), SECERT, algorithm=JWT_ALGORITHM))
+    token = jwt.encode(get_user_token(user_id, username), SECERT, algorithm=JWT_ALGORITHM).decode()
     r.set(USER_TOKEN_PREFIX + user_id, token, expire)
     return token
 

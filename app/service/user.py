@@ -1,10 +1,27 @@
-from common import md5
+from flask import current_app
 
+from common import md5
 from model.user import User
 from config import server_config
-from cache.token import add_token, remove_token
+from cache.token import add_token, remove_token, get_token
 
 SECRET = server_config.get('server', 'secret')
+
+
+def find_user_by_user_id_for_token(user_id):
+    # validate cached token
+    token = get_token(user_id)
+    if token is None:
+        raise RuntimeError('invalid token')
+
+    # search for user
+    users = User.objects(id=user_id)
+    if len(users) <= 0:
+        raise RuntimeError('no such user')
+
+    current_app.logger.info('found user with id:' + user_id)
+
+    return users[0]
 
 
 def get_hashed_password(password_not_hashed):
@@ -50,3 +67,9 @@ def user_login(username, password_not_hashed):
     token = add_token(login_user_id, login_user.username)
 
     return token
+
+
+def user_logout(user_id):
+    # simply remove user token
+    current_app.logger.info('user logout: ' + user_id)
+    remove_token(user_id)

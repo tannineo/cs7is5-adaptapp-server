@@ -31,5 +31,16 @@ class HelloSimple(Resource):
 SERVER_HOST = server_config.get('server', 'host')
 SERVER_PORT = server_config.get('server', 'port')
 
+
+@app.errorhandler(404)
+def error_404(e):
+    return '404 Error', 404
+
+
+@app.errorhandler(Exception)
+def all_exception_handler(e):
+    return {'msg': str(e)}, 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, host=SERVER_HOST, port=SERVER_PORT)
