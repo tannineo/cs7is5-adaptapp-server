@@ -9,6 +9,13 @@ user_api = Namespace(
     'user',
     description='User Controller, register, login, logout & account settings')
 
+# swagger header doc
+user_auth_header_parser = user_api.parser()
+user_auth_header_parser.add_argument(
+    'Authorization',
+    location='headers',
+    help='the authorization where the token is')
+
 register_fields = user_api.model(
     'register', {
         'username': fields.String(required=True, description='username'),
@@ -77,15 +84,9 @@ class UserLogin(Resource):
         }
 
 
-user_logout_parser = user_api.parser()
-user_logout_parser.add_argument('Authorization',
-                                location='headers',
-                                help='the authorization where the token is')
-
-
 @user_api.route('/logout')
 @user_api.header('Authorization', 'the authorization where the token is')
-@user_api.expect(user_logout_parser)
+@user_api.expect(user_auth_header_parser)
 class UserLogout(Resource):
     @user_api.doc('user_logout')
     @login_required()
@@ -94,9 +95,17 @@ class UserLogout(Resource):
         return {'msg': 'OK'}
 
 
+user_setting_fields = user_api.model(
+    'user_setting', {
+        'force_pic_config': fields.String(required=True,
+                                          description='username'),
+        'network_status': fields.String(required=True, description='email'),
+    })
+
+
 @user_api.route('/config')
 @user_api.header('Authorization', 'the authorization where the token is')
-@user_api.expect(user_logout_parser)
+@user_api.expect(user_auth_header_parser)
 class UserConfig(Resource):
     @user_api.doc('user_config')
     @login_required()
@@ -113,10 +122,29 @@ class UserConfig(Resource):
             }
         }
 
-    @user_api.doc('user_config_update')
+    @user_api.doc('user_config_update', body=user_setting_fields)
     @login_required()
     def post(self):
-        return {'msg': 'OK'}
+        json = request.get_json()
+
+        if not json['force_pic_config']:
+            raise RuntimeError('force_pic_config is required.')
+        elif not json['network_status']:
+            raise RuntimeError('network_status is required.')
+
+        network_status = json['network_status']
+        force_pic_config = json['force_pic_config']
+
+        user_service.user_update_network_status_settings(
+            g.user, network_status, force_pic_config)
+
+        return {
+            'msg': 'OK',
+            'result': {
+                'network_status': network_status,
+                'force_pic_config': force_pic_config
+            }
+        }
 
 
 update_user_tags = user_api.model('update_user_tags', {
@@ -127,7 +155,7 @@ update_user_tags = user_api.model('update_user_tags', {
 
 @user_api.route('/tags')
 @user_api.header('Authorization', 'the authorization where the token is')
-@user_api.expect(user_logout_parser)
+@user_api.expect(user_auth_header_parser)
 class UserTags(Resource):
     @user_api.doc('tags_list')
     @login_required()

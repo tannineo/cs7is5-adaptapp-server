@@ -11,7 +11,9 @@ app = Flask(__name__)
 app.config['MONGODB_SETTINGS'] = {
     'db': server_config.get('mongo', 'db'),
     'host': server_config.get('mongo', 'host'),
-    'port': int(server_config.get('mongo', 'port'))
+    'port': int(server_config.get('mongo', 'port')),
+    'username': server_config.get('mongo', 'username'),
+    'password': server_config.get('mongo', 'password'),
 }
 db.init_app(app)
 
@@ -35,6 +37,11 @@ SERVER_PORT = server_config.get('server', 'port')
 @app.errorhandler(404)
 def error_404(e):
     return '404 Error', 404
+
+
+@app.errorhandler(RuntimeError)
+def all_exception_handler(e):
+    return {'msg': str(e)}, 200
 
 
 @app.errorhandler(Exception)

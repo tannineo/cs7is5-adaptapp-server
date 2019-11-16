@@ -1,7 +1,7 @@
 from flask import current_app, g
 
 from common import md5
-from constant import UserNetworkSetting
+from constant import UserNetworkSetting, isInEnum, ForcePicConfig
 from model.user import User
 from model.tag import Tag
 from config import server_config
@@ -108,3 +108,19 @@ def update_user_tags(user, tags=[]):
     user.save()
 
     current_app.logger.info('user: ' + str(user.id) + ' saved tags')
+
+
+def user_update_network_status_settings(user, network_status,
+                                        force_pic_config):
+
+    if not isInEnum(network_status, UserNetworkSetting):
+        raise RuntimeError('invalide network_status')
+    if not isInEnum(force_pic_config, ForcePicConfig):
+        raise RuntimeError('invalide force_pic_config')
+
+    # save force_pic_config into user model
+    user.force_pic_config = force_pic_config
+    user.save()
+
+    # update network_status in cache
+    cache_network.add_network_settings(str(user.id), network_status)
