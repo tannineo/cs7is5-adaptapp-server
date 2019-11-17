@@ -39,14 +39,9 @@ def error_404(e):
     return '404 Error', 404
 
 
-@app.errorhandler(RuntimeError)
-def all_exception_handler(e):
-    return {'msg': str(e)}, 200
-
-
 @app.errorhandler(Exception)
 def all_exception_handler(e):
-    return {'msg': str(e)}, 500
+    return {'msg': str(e)}, 200
 
 
 if __name__ == '__main__':
