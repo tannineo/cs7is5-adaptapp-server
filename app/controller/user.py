@@ -32,11 +32,11 @@ class UserRegister(Resource):
         json = request.get_json()
 
         if not json['username']:
-            raise RuntimeError('Username is required.')
+            raise Exception('Username is required.')
         elif not json['password_not_hashed']:
-            raise RuntimeError('Password is required.')
+            raise Exception('Password is required.')
         elif not json['email']:
-            raise RuntimeError('Email is required.')
+            raise Exception('Email is required.')
 
         user_service.create_user(
             username=json['username'],
@@ -62,9 +62,9 @@ class UserLogin(Resource):
         json = request.get_json()
 
         if not json['username']:
-            raise RuntimeError('Username is required.')
+            raise Exception('Username is required.')
         elif not json['password_not_hashed']:
-            raise RuntimeError('Password is required.')
+            raise Exception('Password is required.')
 
         # service logic
         token, tags, force_pic_config = user_service.user_login(
@@ -128,9 +128,9 @@ class UserConfig(Resource):
         json = request.get_json()
 
         if not json['force_pic_config']:
-            raise RuntimeError('force_pic_config is required.')
+            raise Exception('force_pic_config is required.')
         elif not json['network_status']:
-            raise RuntimeError('network_status is required.')
+            raise Exception('network_status is required.')
 
         network_status = json['network_status']
         force_pic_config = json['force_pic_config']
@@ -170,7 +170,7 @@ class UserTags(Resource):
         json = request.get_json()
 
         if not json['tags']:
-            raise RuntimeError('Username is required.')
+            raise Exception('Username is required.')
 
         # service logic
         user_service.update_user_tags(g.user, json['tags'])

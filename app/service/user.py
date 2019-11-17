@@ -15,12 +15,12 @@ def find_user_by_user_id_for_token(user_id):
     # validate cached token
     token = get_token(user_id)
     if not token:
-        raise RuntimeError('invalid token')
+        raise Exception('invalid token')
 
     # search for user
     users = User.objects(id=user_id)
     if len(users) <= 0:
-        raise RuntimeError('no such user')
+        raise Exception('no such user')
 
     current_app.logger.info('found user with id:' + user_id)
 
@@ -36,9 +36,9 @@ def create_user(username, password_not_hashed, email):
                             ' email:' + email)
     # create a user, but check if user exists first
     if User.objects(username=username).count() > 0:
-        raise RuntimeError('username already exists')
+        raise Exception('username already exists')
     if User.objects(email=email).count() > 0:
-        raise RuntimeError('email already exists')
+        raise Exception('email already exists')
 
     # md5 hash the string
     hashed_password = get_hashed_password(password_not_hashed)
@@ -61,12 +61,12 @@ def user_login(username, password_not_hashed):
     login_users = User.objects(username=username)
 
     if len(login_users) != 1:
-        raise RuntimeError('user not exists')
+        raise Exception('user not exists')
 
     login_user = login_users[0]
 
     if login_user.password != get_hashed_password(password_not_hashed):
-        raise RuntimeError('password is not correct')
+        raise Exception('password is not correct')
 
     login_user_id = str(login_user.id)
 
@@ -103,7 +103,7 @@ def update_user_tags(user, tags=[]):
     for t in tags:
         current_app.logger.info('searching tag: ' + t)
         if Tag.objects(name=t).count() <= 0:
-            raise RuntimeError('tag: ' + t + ' is not in the system')
+            raise Exception('tag: ' + t + ' is not in the system')
     user.tags = tags
     user.save()
 
@@ -114,9 +114,9 @@ def user_update_network_status_settings(user, network_status,
                                         force_pic_config):
 
     if not isInEnum(network_status, UserNetworkSetting):
-        raise RuntimeError('invalide network_status')
+        raise Exception('invalide network_status')
     if not isInEnum(force_pic_config, ForcePicConfig):
-        raise RuntimeError('invalide force_pic_config')
+        raise Exception('invalide force_pic_config')
 
     # save force_pic_config into user model
     user.force_pic_config = force_pic_config

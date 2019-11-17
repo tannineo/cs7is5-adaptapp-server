@@ -20,12 +20,12 @@ def login_required(roles=[UserRole.USER]):
                 token_data = jwt.decode(auth, SECRET, algorithms='HS256')
                 current_app.logger.info('token_data:' + str(token_data))
             except Exception:
-                raise RuntimeError('Invalid token')
+                raise Exception('Invalid token')
 
             if not token_data:
-                raise RuntimeError('invalid token')
+                raise Exception('invalid token')
             if not token_data['userID']:
-                raise RuntimeError('invalid token')
+                raise Exception('invalid token')
 
             # search for the user
             user = user_service.find_user_by_user_id_for_token(
@@ -33,7 +33,7 @@ def login_required(roles=[UserRole.USER]):
 
             for r in roles:
                 if r.value not in user.roles:
-                    raise RuntimeError('need authorization: ' + r)
+                    raise Exception('need authorization: ' + r)
 
             g.user = user
             g.user_id = str(user.id)

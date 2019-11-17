@@ -44,10 +44,5 @@ def all_exception_handler(e):
     return {'msg': str(e)}, 200
 
 
-@app.errorhandler(RuntimeError)
-def all_runtime_error_handler(e):
-    return {'msg': str(e)}, 200
-
-
 if __name__ == '__main__':
     app.run(debug=True, host=SERVER_HOST, port=SERVER_PORT)
