@@ -2,7 +2,7 @@ from flask import request, g
 from flask_restplus import Namespace, Resource, fields
 from mongoengine.errors import ValidationError
 
-from service.picture import get_by_tag, upload
+from service.picture import get_by_tag, upload, recommender
 from .auth_decorator import login_required
 
 
@@ -36,21 +36,31 @@ class PictureRecommend(Resource):
     def get(self):
         return {'msg': '404', 'result': "No pictures found"}
 
-        # user = session.user
-        # tags = recom
-        # pictures = get_by_tag(search_str)
-        # if (pictures == None):
-        #     return {'msg': '404', 'result': "No pictures found"}
-        # else:
-        #     return {'msg': 'OK', 'result': pictures.to_json()}
+        user = g.user
+        picture_ids = []
+        # picture_ids = recommender(g.user)
+        if (picture_ids == []):
+            tag = user.tags[0]
+            pictures = get_by_tag(tag)
 
+        else:
+            pictures = Picture.objects(_id__in=picture_ids)
+        
+        if (pictures == None):
+            return {'msg': '404', 'result': "No pictures found"}
+        else:
+            return {'msg': 'OK', 'result': pictures.to_json()}
+
+like_fields = picture_api.model(
+    'upload', {
+        'pic_id': fields.Integer(required=True,description='picture id'),
+    })
 @picture_api.route('/like')
 class PictureLike(Resource):
-    @picture_api.doc('like')
+    @picture_api.doc('like', body=like_fields)
     @login_required()
 
     def post(self):
-        return {'msg': "x"}, 400
 
         json = request.get_json()
 
