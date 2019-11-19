@@ -124,3 +124,34 @@ def user_update_network_status_settings(user, network_status,
 
     # update network_status in cache
     cache_network.add_network_settings(str(user.id), network_status)
+
+def recommender(target_user_id):
+    users = User.objects
+    users_list = []
+    for u in users:
+        pics_list = []
+        for pic in u.likes:
+            pics_list.append(pic._id)
+        users_list.append({
+            "userid" : u._id, 
+            "pics" : pics_list
+        })
+
+    #resulting list looks like :
+    # [
+    #     {
+    #         "userid" : 1, 
+    #         "pics" : [1,2,3]
+    #     },
+    #     {
+    #         "userid" : 2, 
+    #         "pics" : [3,4]
+    #     },
+    # ]
+
+    #TODO: Call to recommender system
+    recommended_picture_ids_list = []
+    # recommended_picture_ids_list = RECOMMENDER(users_list, target_user_id)
+    return recommended_picture_ids_list
+
+        

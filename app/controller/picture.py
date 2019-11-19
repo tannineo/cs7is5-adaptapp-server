@@ -2,7 +2,8 @@ from flask import request, g
 from flask_restplus import Namespace, Resource, fields
 from mongoengine.errors import ValidationError
 
-from service.picture import get_by_tag, upload, recommender
+from service.user import recommender
+from service.picture import get_by_tag, upload
 from .auth_decorator import login_required
 
 
@@ -38,7 +39,7 @@ class PictureRecommend(Resource):
 
         user = g.user
         picture_ids = []
-        # picture_ids = recommender(g.user)
+        picture_ids = recommender(g.user_id)
         if (picture_ids == []):
             tag = user.tags[0]
             pictures = get_by_tag(tag)
@@ -52,7 +53,7 @@ class PictureRecommend(Resource):
             return {'msg': 'OK', 'result': pictures.to_json()}
 
 like_fields = picture_api.model(
-    'upload', {
+    'like', {
         'pic_id': fields.Integer(required=True,description='picture id'),
     })
 @picture_api.route('/like')
