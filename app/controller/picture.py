@@ -10,8 +10,16 @@ picture_api = Namespace(
     'picture',
     description='Picture Controller, search, recommend, like and upload')
 
+user_auth_header_parser = picture_api.parser()
+user_auth_header_parser.add_argument(
+    'Authorization',
+    location='headers',
+    help='the authorization where the token is')
+
 
 @picture_api.route('/search')
+@picture_api.header('Authorization', 'the authorization where the token is')
+@picture_api.expect(user_auth_header_parser)
 class PictureSearch(Resource):
     @picture_api.doc('search')
     @login_required()
@@ -54,6 +62,8 @@ class PictureSearch(Resource):
 
 
 @picture_api.route('/recommend')
+@picture_api.header('Authorization', 'the authorization where the token is')
+@picture_api.expect(user_auth_header_parser)
 class PictureRecommend(Resource):
     @picture_api.doc('recommend')
     @login_required()
@@ -110,6 +120,8 @@ like_fields = picture_api.model(
 
 
 @picture_api.route('/like')
+@picture_api.header('Authorization', 'the authorization where the token is')
+@picture_api.expect(user_auth_header_parser)
 class PictureLike(Resource):
     @picture_api.doc('like', body=like_fields)
     @login_required()
@@ -144,28 +156,32 @@ upload_fields = picture_api.model(
 
 
 @picture_api.route('/upload')
+@picture_api.header('Authorization', 'the authorization where the token is')
+@picture_api.expect(user_auth_header_parser)
 class PictureUpload(Resource):
     @picture_api.doc('upload', body=upload_fields)
     @login_required()
     def post(self):
-        json = request.get_json()
-        """validate req data"""
-        error = None
+        # json = request.get_json()
+        # """validate req data"""
+        # error = None
 
-        if not json['name']:
-            error = 'Name is required.'
-        if not json['img_url']:
-            error = 'Image url is required.'
-        if not json['tags']:
-            error = 'Tags field is required.'
+        # if not json['name']:
+        #     error = 'Name is required.'
+        # if not json['img_url']:
+        #     error = 'Image url is required.'
+        # if not json['tags']:
+        #     error = 'Tags field is required.'
 
-        if error is None:
-            """service logic"""
-            picture = upload(name=json['name'],
-                             image=json['img_url'],
-                             tags=json['tags'])
-            print(picture.to_json())
-            return {'msg': 'OK', 'result': picture.to_json()}
+        # if error is None:
+        #     """service logic"""
+        #     picture = upload(name=json['name'],
+        #                      image=json['img_url'],
+        #                      tags=json['tags'])
+        #     print(picture.to_json())
+        #     return {'msg': 'OK', 'result': picture.to_json()}
 
-        else:
-            return {'msg': error}, 400
+        # else:
+        #     return {'msg': error}, 400
+
+        return {'msg': 'OK'}
