@@ -1,5 +1,7 @@
 import datetime
 
+from model.picture import Picture
+
 from constant import UserRole, ForcePicConfig
 from . import db
 
@@ -21,3 +23,5 @@ class User(db.Document):
     force_pic_config = db.StringField(default=ForcePicConfig.DEFAULT.value)
 
     create_time = db.DateTimeField(default=datetime.datetime.utcnow)
+
+    likes = db.ListField(db.ReferenceField(Picture))
