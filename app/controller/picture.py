@@ -16,12 +16,11 @@ user_auth_header_parser.add_argument(
     location='headers',
     help='the authorization where the token is')
 
-
 @picture_api.route('/search')
 @picture_api.header('Authorization', 'the authorization where the token is')
 @picture_api.expect(user_auth_header_parser)
 class PictureSearch(Resource):
-    @picture_api.doc('search')
+    @picture_api.doc('search', params={'search': 'An search keyword'})
     @login_required()
     def get(self):
         search_str = request.args.get("search")
