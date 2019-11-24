@@ -20,12 +20,10 @@ user_auth_header_parser.add_argument(
 @picture_api.header('Authorization', 'the authorization where the token is')
 @picture_api.expect(user_auth_header_parser)
 class PictureSearch(Resource):
-    @picture_api.doc('search', params={'search': 'An search keyword'})
+    @picture_api.doc('search', params={'search': 'An search keyword, empty to get system suggestion'})
     @login_required()
     def get(self):
-        search_str = request.args.get("search")
-        if (search_str == ''):
-            raise Exception('empty search string')
+        # search_str = request.args.get("search")
 
         # pictures = get_by_tag(search_str)
         # return {'msg': 'OK', 'result': {'picutres': pictures.to_json()}}
@@ -55,6 +53,66 @@ class PictureSearch(Resource):
                     'id': 'eee111',
                     'name': 'squirrel-00001',
                     'url': '/00001-squirrel.jpg'
+                }, {
+                    'id': 'aaa112',
+                    'name': 'horse-00002',
+                    'url': '/00002-horse.jpg'
+                }, {
+                    'id': 'bbb112',
+                    'name': 'cat-00002',
+                    'url': '/00002-cat.jpg'
+                }, {
+                    'id': 'ccc112',
+                    'name': 'elephant-00002',
+                    'url': '/00002-elephant.jpg'
+                }, {
+                    'id': 'ddd112',
+                    'name': 'dog-00002',
+                    'url': '/00002-dog.jpg'
+                }, {
+                    'id': 'eee112',
+                    'name': 'squirrel-00002',
+                    'url': '/00002-squirrel.jpg'
+                }, {
+                    'id': 'aaa113',
+                    'name': 'horse-00003',
+                    'url': '/00003-horse.jpg'
+                }, {
+                    'id': 'bbb113',
+                    'name': 'cat-00003',
+                    'url': '/00003-cat.jpg'
+                }, {
+                    'id': 'ccc113',
+                    'name': 'elephant-00003',
+                    'url': '/00003-elephant.jpg'
+                }, {
+                    'id': 'ddd113',
+                    'name': 'dog-00003',
+                    'url': '/00003-dog.jpg'
+                }, {
+                    'id': 'eee113',
+                    'name': 'squirrel-00003',
+                    'url': '/00003-squirrel.jpg'
+                }, {
+                    'id': 'aaa114',
+                    'name': 'horse-00004',
+                    'url': '/00004-horse.jpg'
+                }, {
+                    'id': 'bbb114',
+                    'name': 'cat-00004',
+                    'url': '/00004-cat.jpg'
+                }, {
+                    'id': 'ccc114',
+                    'name': 'elephant-00004',
+                    'url': '/00004-elephant.jpg'
+                }, {
+                    'id': 'ddd114',
+                    'name': 'dog-00004',
+                    'url': '/00004-dog.jpg'
+                }, {
+                    'id': 'eee114',
+                    'name': 'squirrel-00004',
+                    'url': '/00004-squirrel.jpg'
                 }]
             }
         }
