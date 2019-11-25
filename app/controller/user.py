@@ -129,9 +129,7 @@ class UserConfig(Resource):
     def post(self):
         json = request.get_json()
 
-        if not json['force_pic_config']:
-            raise Exception('force_pic_config is required.')
-        elif not json['network_status']:
+        if not json['network_status']:
             raise Exception('network_status is required.')
 
         network_status = json['network_status']
