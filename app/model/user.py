@@ -2,7 +2,7 @@ import datetime
 
 from model.picture import Picture
 
-from constant import UserRole, ForcePicConfig
+from constant import UserRole
 from . import db
 
 
@@ -20,7 +20,7 @@ class User(db.Document):
     tags = db.ListField(db.StringField(), default=[])
 
     # force settings
-    force_pic_config = db.StringField(default=ForcePicConfig.DEFAULT.value)
+    force_pic_config = db.BooleanField(default=False)
 
     create_time = db.DateTimeField(default=datetime.datetime.utcnow)
 

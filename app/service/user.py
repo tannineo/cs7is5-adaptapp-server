@@ -1,7 +1,7 @@
 from flask import current_app, g
 
 from common import md5
-from constant import UserNetworkSetting, isInEnum, ForcePicConfig
+from constant import UserNetworkSetting, isInEnum
 from model.user import User
 from model.tag import Tag
 from config import server_config
@@ -115,8 +115,6 @@ def user_update_network_status_settings(user, network_status,
 
     if not isInEnum(network_status, UserNetworkSetting):
         raise Exception('invalide network_status')
-    if not isInEnum(force_pic_config, ForcePicConfig):
-        raise Exception('invalide force_pic_config')
 
     # save force_pic_config into user model
     user.force_pic_config = force_pic_config
@@ -125,6 +123,7 @@ def user_update_network_status_settings(user, network_status,
     # update network_status in cache
     cache_network.add_network_settings(str(user.id), network_status)
 
+
 def recommender(target_user_id):
     users = User.objects
     users_list = []
@@ -132,19 +131,16 @@ def recommender(target_user_id):
         pics_list = []
         for pic in u.likes:
             pics_list.append(pic._id)
-        users_list.append({
-            "userid" : u._id, 
-            "pics" : pics_list
-        })
+        users_list.append({"userid": u._id, "pics": pics_list})
 
     #resulting list looks like :
     # [
     #     {
-    #         "userid" : 1, 
+    #         "userid" : 1,
     #         "pics" : [1,2,3]
     #     },
     #     {
-    #         "userid" : 2, 
+    #         "userid" : 2,
     #         "pics" : [3,4]
     #     },
     # ]
@@ -153,5 +149,3 @@ def recommender(target_user_id):
     recommended_picture_ids_list = []
     # recommended_picture_ids_list = RECOMMENDER(users_list, target_user_id)
     return recommended_picture_ids_list
-
-        

@@ -97,9 +97,11 @@ class UserLogout(Resource):
 
 user_setting_fields = user_api.model(
     'user_setting', {
-        'force_pic_config': fields.String(required=True,
-                                          description='username'),
-        'network_status': fields.String(required=True, description='email'),
+        'force_pic_config':
+        fields.Boolean(required=True,
+                       description='true / false to show high resolution'),
+        'network_status':
+        fields.String(required=True, description='email'),
     })
 
 

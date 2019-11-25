@@ -6,12 +6,6 @@ class UserRole(Enum):
     ADMIN = 'admin'
 
 
-class ForcePicConfig(Enum):
-    DEFAULT = 'default'
-    BIG = 'big'
-    SMALL = 'small'
-
-
 class TagRecommendRanking(Enum):
     STAR1 = 1
     STAR2 = 2
