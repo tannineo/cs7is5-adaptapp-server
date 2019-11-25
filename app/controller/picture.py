@@ -36,83 +36,123 @@ class PictureSearch(Resource):
                 'pictures': [{
                     'id': 'aaa111',
                     'name': 'horse-00001',
-                    'url': '/00001-horse.jpg'
+                    'url': '/00001-horse.jpg',
+                    'isLike': False,
+                    'likes': 233
                 }, {
                     'id': 'bbb111',
                     'name': 'cat-00001',
-                    'url': '/00001-cat.jpg'
+                    'url': '/00001-cat.jpg',
+                    'isLike': False,
+                    'likes': 666
                 }, {
                     'id': 'ccc111',
                     'name': 'elephant-00001',
-                    'url': '/00001-elephant.jpg'
+                    'url': '/00001-elephant.jpg',
+                    'isLike': True,
+                    'likes': 666
                 }, {
                     'id': 'ddd111',
                     'name': 'dog-00001',
-                    'url': '/00001-dog.jpg'
+                    'url': '/00001-dog.jpg',
+                    'isLike': False,
+                    'likes': 123
                 }, {
                     'id': 'eee111',
                     'name': 'squirrel-00001',
-                    'url': '/00001-squirrel.jpg'
+                    'url': '/00001-squirrel.jpg',
+                    'isLike': False,
+                    'likes': 111
                 }, {
                     'id': 'aaa112',
                     'name': 'horse-00002',
-                    'url': '/00002-horse.jpg'
+                    'url': '/00002-horse.jpg',
+                    'isLike': True,
+                    'likes': 1
                 }, {
                     'id': 'bbb112',
                     'name': 'cat-00002',
-                    'url': '/00002-cat.jpg'
+                    'url': '/00002-cat.jpg',
+                    'isLike': False,
+                    'likes': 0
                 }, {
                     'id': 'ccc112',
                     'name': 'elephant-00002',
-                    'url': '/00002-elephant.jpg'
+                    'url': '/00002-elephant.jpg',
+                    'isLike': False,
+                    'likes': 0
                 }, {
                     'id': 'ddd112',
                     'name': 'dog-00002',
-                    'url': '/00002-dog.jpg'
+                    'url': '/00002-dog.jpg',
+                    'isLike': True,
+                    'likes': 12
                 }, {
                     'id': 'eee112',
                     'name': 'squirrel-00002',
-                    'url': '/00002-squirrel.jpg'
+                    'url': '/00002-squirrel.jpg',
+                    'isLike': False,
+                    'likes': 0
                 }, {
                     'id': 'aaa113',
                     'name': 'horse-00003',
-                    'url': '/00003-horse.jpg'
+                    'url': '/00003-horse.jpg',
+                    'isLike': False,
+                    'likes': 0
                 }, {
                     'id': 'bbb113',
                     'name': 'cat-00003',
-                    'url': '/00003-cat.jpg'
+                    'url': '/00003-cat.jpg',
+                    'isLike': True,
+                    'likes': 10
                 }, {
                     'id': 'ccc113',
                     'name': 'elephant-00003',
-                    'url': '/00003-elephant.jpg'
+                    'url': '/00003-elephant.jpg',
+                    'isLike': True,
+                    'likes': 10
                 }, {
                     'id': 'ddd113',
                     'name': 'dog-00003',
-                    'url': '/00003-dog.jpg'
+                    'url': '/00003-dog.jpg',
+                    'isLike': True,
+                    'likes': 10
                 }, {
                     'id': 'eee113',
                     'name': 'squirrel-00003',
-                    'url': '/00003-squirrel.jpg'
+                    'url': '/00003-squirrel.jpg',
+                    'isLike': False,
+                    'likes': 10
                 }, {
                     'id': 'aaa114',
                     'name': 'horse-00004',
-                    'url': '/00004-horse.jpg'
+                    'url': '/00004-horse.jpg',
+                    'isLike': False,
+                    'likes': 1523
                 }, {
                     'id': 'bbb114',
                     'name': 'cat-00004',
-                    'url': '/00004-cat.jpg'
+                    'url': '/00004-cat.jpg',
+                    'isLike': False,
+                    'likes': 2
                 }, {
                     'id': 'ccc114',
                     'name': 'elephant-00004',
-                    'url': '/00004-elephant.jpg'
+                    'url': '/00004-elephant.jpg',
+                    'isLike': False,
+                    'likes': 10122
                 }, {
                     'id': 'ddd114',
                     'name': 'dog-00004',
-                    'url': '/00004-dog.jpg'
+                    'url': '/00004-dog.jpg',
+                    'isLike': False,
+                    'likes': 10
                 }, {
                     'id': 'eee114',
                     'name': 'squirrel-00004',
-                    'url': '/00004-squirrel.jpg'
+                    'url': '/00004-squirrel.jpg',
+                    'isLike': False,
+                    'likes': 321
                 }]
             }
         }
@@ -148,23 +188,33 @@ class PictureRecommend(Resource):
                 'pictures': [{
                     'id': 'aaa111',
                     'name': 'horse-00001',
-                    'url': '/00001-horse.jpg'
+                    'url': '/00001-horse.jpg',
+                    'isLike': False,
+                    'likes': 10
                 }, {
                     'id': 'bbb111',
                     'name': 'cat-00001',
-                    'url': '/00001-cat.jpg'
+                    'url': '/00001-cat.jpg',
+                    'isLike': False,
+                    'likes': 102
                 }, {
                     'id': 'ccc111',
                     'name': 'elephant-00001',
-                    'url': '/00001-elephant.jpg'
+                    'url': '/00001-elephant.jpg',
+                    'isLike': False,
+                    'likes': 1021
                 }, {
                     'id': 'ddd111',
                     'name': 'dog-00001',
-                    'url': '/00001-dog.jpg'
+                    'url': '/00001-dog.jpg',
+                    'isLike': False,
+                    'likes': 106
                 }, {
                     'id': 'eee111',
                     'name': 'squirrel-00001',
-                    'url': '/00001-squirrel.jpg'
+                    'url': '/00001-squirrel.jpg',
+                    'isLike': False,
+                    'likes': 10214
                 }]
             }
         }

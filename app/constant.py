@@ -22,9 +22,9 @@ class TagRecommendRanking(Enum):
 
 class UserNetworkSetting(Enum):
     UNKNOWN = 'unknown'
-    WIFI = 'wifi'
-    CELL = 'cell'
-    CABLE = 'cable'
+    G2 = '2g'
+    G3 = '3g'
+    G4 = '4g'
 
 
 # judge if a value is in a Enum
