@@ -89,7 +89,8 @@ def user_network_status(user_id):
     network_status = cache_network.get_network_settings(user_id)
     if not network_status:
         network_status = UserNetworkSetting.UNKNOWN.value
-
+    else:
+        network_status = network_status.decode('utf-8')
     return network_status
 
 

@@ -73,7 +73,7 @@ class UserLogin(Resource):
 
         network_status = user_service.user_network_status(g.user_id)
 
-        return {
+        result = {
             'msg': 'OK',
             'result': {
                 'token': token,
@@ -82,6 +82,10 @@ class UserLogin(Resource):
                 'network_status': network_status
             }
         }
+
+        # print(result)
+
+        return result
 
 
 @user_api.route('/logout')
