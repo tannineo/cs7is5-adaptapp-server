@@ -83,8 +83,6 @@ class UserLogin(Resource):
             }
         }
 
-        # print(result)
-
         return result
 
 

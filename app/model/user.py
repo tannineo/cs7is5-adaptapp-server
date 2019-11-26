@@ -24,4 +24,4 @@ class User(db.Document):
 
     create_time = db.DateTimeField(default=datetime.datetime.utcnow)
 
-    likes = db.ListField(db.ReferenceField(Picture))
+    likes = db.ListField(db.StringField(), default=[])

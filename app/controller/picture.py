@@ -1,9 +1,9 @@
-from flask import request, g
+from flask import request, g, current_app
 from flask_restplus import Namespace, Resource, fields
 from mongoengine.errors import ValidationError
 
-from service.user import recommender
-from service.picture import get_by_tag, upload
+from service.user import recommender, user_like_a_pic
+from service.picture import get_by_tag, upload, randomly_get_pics, once_load_all
 from .auth_decorator import login_required
 
 picture_api = Namespace(
@@ -16,144 +16,43 @@ user_auth_header_parser.add_argument(
     location='headers',
     help='the authorization where the token is')
 
+
 @picture_api.route('/search')
 @picture_api.header('Authorization', 'the authorization where the token is')
 @picture_api.expect(user_auth_header_parser)
 class PictureSearch(Resource):
-    @picture_api.doc('search', params={'search': 'An search keyword, empty to get system suggestion'})
+    @picture_api.doc(
+        'search',
+        params={'search': 'An search keyword, empty to get system suggestion'})
     @login_required()
     def get(self):
-        # search_str = request.args.get("search")
+        search_str = request.args.get("search")
 
-        # pictures = get_by_tag(search_str)
-        # return {'msg': 'OK', 'result': {'picutres': pictures.to_json()}}
+        if search_str is None:
+            current_app.logger.info('find pictures with NO search keyword')
+            pictures = randomly_get_pics()
+        else:
+            current_app.logger.info('find pictures with search keyword:' +
+                                    search_str)
+            pictures = get_by_tag(search_str)
+
+        pictures_result = []
+        for pic in pictures:
+            # check if liked by the user
+            pic_id = str(pic.id)
+            pictures_result.append({
+                'id': pic_id,
+                'name': pic.name,
+                'url': pic.img_url,
+                'isLike': pic_id in g.user.likes,
+                'likes': pic.likes,
+            })
 
         return {
             'msg': 'OK',
             'result': {
-                'prefix':
-                'http://34.65.122.100:4000/img/',
-                'pictures': [{
-                    'id': 'aaa111',
-                    'name': 'horse-00001',
-                    'url': '/00001-horse.jpg',
-                    'isLike': False,
-                    'likes': 233
-                }, {
-                    'id': 'bbb111',
-                    'name': 'cat-00001',
-                    'url': '/00001-cat.jpg',
-                    'isLike': False,
-                    'likes': 666
-                }, {
-                    'id': 'ccc111',
-                    'name': 'elephant-00001',
-                    'url': '/00001-elephant.jpg',
-                    'isLike': True,
-                    'likes': 666
-                }, {
-                    'id': 'ddd111',
-                    'name': 'dog-00001',
-                    'url': '/00001-dog.jpg',
-                    'isLike': False,
-                    'likes': 123
-                }, {
-                    'id': 'eee111',
-                    'name': 'squirrel-00001',
-                    'url': '/00001-squirrel.jpg',
-                    'isLike': False,
-                    'likes': 111
-                }, {
-                    'id': 'aaa112',
-                    'name': 'horse-00002',
-                    'url': '/00002-horse.jpg',
-                    'isLike': True,
-                    'likes': 1
-                }, {
-                    'id': 'bbb112',
-                    'name': 'cat-00002',
-                    'url': '/00002-cat.jpg',
-                    'isLike': False,
-                    'likes': 0
-                }, {
-                    'id': 'ccc112',
-                    'name': 'elephant-00002',
-                    'url': '/00002-elephant.jpg',
-                    'isLike': False,
-                    'likes': 0
-                }, {
-                    'id': 'ddd112',
-                    'name': 'dog-00002',
-                    'url': '/00002-dog.jpg',
-                    'isLike': True,
-                    'likes': 12
-                }, {
-                    'id': 'eee112',
-                    'name': 'squirrel-00002',
-                    'url': '/00002-squirrel.jpg',
-                    'isLike': False,
-                    'likes': 0
-                }, {
-                    'id': 'aaa113',
-                    'name': 'horse-00003',
-                    'url': '/00003-horse.jpg',
-                    'isLike': False,
-                    'likes': 0
-                }, {
-                    'id': 'bbb113',
-                    'name': 'cat-00003',
-                    'url': '/00003-cat.jpg',
-                    'isLike': True,
-                    'likes': 10
-                }, {
-                    'id': 'ccc113',
-                    'name': 'elephant-00003',
-                    'url': '/00003-elephant.jpg',
-                    'isLike': True,
-                    'likes': 10
-                }, {
-                    'id': 'ddd113',
-                    'name': 'dog-00003',
-                    'url': '/00003-dog.jpg',
-                    'isLike': True,
-                    'likes': 10
-                }, {
-                    'id': 'eee113',
-                    'name': 'squirrel-00003',
-                    'url': '/00003-squirrel.jpg',
-                    'isLike': False,
-                    'likes': 10
-                }, {
-                    'id': 'aaa114',
-                    'name': 'horse-00004',
-                    'url': '/00004-horse.jpg',
-                    'isLike': False,
-                    'likes': 1523
-                }, {
-                    'id': 'bbb114',
-                    'name': 'cat-00004',
-                    'url': '/00004-cat.jpg',
-                    'isLike': False,
-                    'likes': 2
-                }, {
-                    'id': 'ccc114',
-                    'name': 'elephant-00004',
-                    'url': '/00004-elephant.jpg',
-                    'isLike': False,
-                    'likes': 10122
-                }, {
-                    'id': 'ddd114',
-                    'name': 'dog-00004',
-                    'url': '/00004-dog.jpg',
-                    'isLike': False,
-                    'likes': 10
-                }, {
-                    'id': 'eee114',
-                    'name': 'squirrel-00004',
-                    'url': '/00004-squirrel.jpg',
-                    'isLike': False,
-                    'likes': 321
-                }]
+                'prefix': 'http://34.65.122.100:4000/img/',
+                'pictures': pictures_result,
             }
         }
 
@@ -166,56 +65,26 @@ class PictureRecommend(Resource):
     @login_required()
     def get(self):
 
-        # user = g.user
-        # picture_ids = []
-        # picture_ids = recommender(g.user_id)
+        # TODO: change it into recommend
+        pictures = randomly_get_pics()
 
-        # pictures
-        # if (picture_ids == []):
-        #     tag = user.tags[0]
-        #     pictures = get_by_tag(tag)
-
-        # else:
-        #     pictures = Picture.objects(_id__in=picture_ids)
-
-        # return {'msg': 'OK', 'result': pictures.to_json()}
+        pictures_result = []
+        for pic in pictures:
+            # check if liked by the user
+            pic_id = str(pic.id)
+            pictures_result.append({
+                'id': pic_id,
+                'name': pic.name,
+                'url': pic.img_url,
+                'isLike': pic_id in g.user.liked,
+                'likes': pic.likes,
+            })
 
         return {
             'msg': 'OK',
             'result': {
-                'prefix':
-                'http://34.65.122.100:4000/img/',
-                'pictures': [{
-                    'id': 'aaa111',
-                    'name': 'horse-00001',
-                    'url': '/00001-horse.jpg',
-                    'isLike': False,
-                    'likes': 10
-                }, {
-                    'id': 'bbb111',
-                    'name': 'cat-00001',
-                    'url': '/00001-cat.jpg',
-                    'isLike': False,
-                    'likes': 102
-                }, {
-                    'id': 'ccc111',
-                    'name': 'elephant-00001',
-                    'url': '/00001-elephant.jpg',
-                    'isLike': False,
-                    'likes': 1021
-                }, {
-                    'id': 'ddd111',
-                    'name': 'dog-00001',
-                    'url': '/00001-dog.jpg',
-                    'isLike': False,
-                    'likes': 106
-                }, {
-                    'id': 'eee111',
-                    'name': 'squirrel-00001',
-                    'url': '/00001-squirrel.jpg',
-                    'isLike': False,
-                    'likes': 10214
-                }]
+                'prefix': 'http://34.65.122.100:4000/img/',
+                'pictures': pictures_result
             }
         }
 
@@ -236,14 +105,12 @@ class PictureLike(Resource):
 
         json = request.get_json()
 
-        if not json['pic_id']:
+        if json['pic_id'] is None:
             raise Exception('pic_id is required.')
 
-        # pic_id = json['pic_id']
-        # picture = Picture.objects(id=pic_id)
+        pic_id = json['pic_id']
 
-        # user = g.user
-        # user.update(push__likes=picture)
+        user_like_a_pic(g.user, pic_id)
 
         return {
             'msg': 'OK',
@@ -269,6 +136,9 @@ class PictureUpload(Resource):
     @picture_api.doc('upload', body=upload_fields)
     @login_required()
     def post(self):
+
+        # once_load_all()
+
         # json = request.get_json()
         # """validate req data"""
         # error = None

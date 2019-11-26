@@ -125,6 +125,15 @@ def user_update_network_status_settings(user, network_status,
     cache_network.add_network_settings(str(user.id), network_status)
 
 
+# toggle on off
+def user_like_a_pic(user, pic_id):
+    if pic_id in user.likes:
+        user.likes.remove(pic_id)
+    else:
+        user.likes.append(pic_id)
+    user.save()
+
+
 def recommender(target_user_id):
     users = User.objects
     users_list = []
