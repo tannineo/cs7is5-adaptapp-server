@@ -6,6 +6,11 @@ from service.user import recommender, user_like_a_pic
 from service.picture import get_by_tag, upload, randomly_get_pics, once_load_all, change_likes_of_pic
 from .auth_decorator import login_required
 
+
+def prn_obj(obj):
+    print('\n'.join(['%s:%s' % item for item in obj.__dict__.items()]))
+
+
 picture_api = Namespace(
     'picture',
     description='Picture Controller, search, recommend, like and upload')
@@ -30,31 +35,48 @@ class PictureSearch(Resource):
 
         if search_str is None:
             current_app.logger.info('find pictures with NO search keyword')
-            pictures = randomly_get_pics()
+            pictures = randomly_get_pics(g.user.tags, 20)
+
+            pictures_result = []
+            for pic in pictures:
+                pic_id = str(pic['_id'])
+                pictures_result.append({
+                    'id': pic_id,
+                    'name': pic['name'],
+                    'url': pic['img_url'],
+                    'isLike': pic_id in g.user.likes,
+                    'likes': pic['likes'],
+                })
+
+            return {
+                'msg': 'OK',
+                'result': {
+                    'prefix': 'http://34.65.122.100:4000/img/',
+                    'pictures': pictures_result,
+                }
+            }
         else:
             current_app.logger.info('find pictures with search keyword:' +
                                     search_str)
             pictures = get_by_tag(search_str)
+            pictures_result = []
+            for pic in pictures:
+                pic_id = str(pic.id)
+                pictures_result.append({
+                    'id': pic_id,
+                    'name': pic.name,
+                    'url': pic.img_url,
+                    'isLike': pic_id in g.user.likes,
+                    'likes': pic.likes,
+                })
 
-        pictures_result = []
-        for pic in pictures:
-            # check if liked by the user
-            pic_id = str(pic.id)
-            pictures_result.append({
-                'id': pic_id,
-                'name': pic.name,
-                'url': pic.img_url,
-                'isLike': pic_id in g.user.likes,
-                'likes': pic.likes,
-            })
-
-        return {
-            'msg': 'OK',
-            'result': {
-                'prefix': 'http://34.65.122.100:4000/img/',
-                'pictures': pictures_result,
+            return {
+                'msg': 'OK',
+                'result': {
+                    'prefix': 'http://34.65.122.100:4000/img/',
+                    'pictures': pictures_result,
+                }
             }
-        }
 
 
 @picture_api.route('/recommend')
@@ -66,18 +88,18 @@ class PictureRecommend(Resource):
     def get(self):
 
         # TODO: change it into recommend
-        pictures = randomly_get_pics(5)
+        pictures = randomly_get_pics(g.user.tags, 5)
 
         pictures_result = []
         for pic in pictures:
             # check if liked by the user
-            pic_id = str(pic.id)
+            pic_id = str(pic['_id'])
             pictures_result.append({
                 'id': pic_id,
-                'name': pic.name,
-                'url': pic.img_url,
+                'name': pic['name'],
+                'url': pic['img_url'],
                 'isLike': pic_id in g.user.likes,
-                'likes': pic.likes,
+                'likes': pic['likes'],
             })
 
         return {

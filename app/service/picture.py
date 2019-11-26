@@ -14,9 +14,36 @@ def get_by_tag(search_string, num=20):
     return pictures
 
 
-def randomly_get_pics(num=20):
-    # TODO: aggregate random
-    pictures = Picture.objects[:num]()
+def randomly_get_pics(prefered_tags=[], num=20):
+    pictures = []
+
+    if len(prefered_tags) == 0:
+        # TODO: aggregate random
+        pictures = Picture.objects().aggregate(*[
+            {
+                '$sample': {
+                    'size': num
+                }
+            },
+        ])
+    else:
+        for i in range(20):
+            key = random.choice(prefered_tags)
+            pictures.extend(Picture.objects().aggregate(*[
+                {
+                    '$match': {
+                        'tags': {
+                            '$eq': key
+                        }
+                    }
+                },
+                {
+                    '$sample': {
+                        'size': 1
+                    }
+                },
+            ]))
+
     return pictures
 
 
