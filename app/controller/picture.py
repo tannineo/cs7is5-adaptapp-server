@@ -76,7 +76,7 @@ class PictureRecommend(Resource):
                 'id': pic_id,
                 'name': pic.name,
                 'url': pic.img_url,
-                'isLike': pic_id in g.user.liked,
+                'isLike': pic_id in g.user.likes,
                 'likes': pic.likes,
             })
 
