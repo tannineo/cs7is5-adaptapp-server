@@ -129,9 +129,12 @@ def user_update_network_status_settings(user, network_status,
 def user_like_a_pic(user, pic_id):
     if pic_id in user.likes:
         user.likes.remove(pic_id)
+        user.save()
+        return -1
     else:
         user.likes.append(pic_id)
-    user.save()
+        user.save()
+        return 1
 
 
 def recommender(target_user_id):

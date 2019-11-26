@@ -3,7 +3,7 @@ from flask_restplus import Namespace, Resource, fields
 from mongoengine.errors import ValidationError
 
 from service.user import recommender, user_like_a_pic
-from service.picture import get_by_tag, upload, randomly_get_pics, once_load_all
+from service.picture import get_by_tag, upload, randomly_get_pics, once_load_all, change_likes_of_pic
 from .auth_decorator import login_required
 
 picture_api = Namespace(
@@ -110,7 +110,9 @@ class PictureLike(Resource):
 
         pic_id = json['pic_id']
 
-        user_like_a_pic(g.user, pic_id)
+        result = user_like_a_pic(g.user, pic_id)
+        current_app.logger.info('PictureLike post adjust the pic likes')
+        change_likes_of_pic(pic_id, result)
 
         return {
             'msg': 'OK',

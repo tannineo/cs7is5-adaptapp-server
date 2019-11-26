@@ -29,6 +29,21 @@ def upload(name, img_url, tags):
     return picture
 
 
+def change_likes_of_pic(pic_id, num=1):
+    pic_list = Picture.objects(id=pic_id)
+    if (len(pic_list) <= 0):
+        current_app.logger.info('change_likes_of_pic find id=' + str(pic_id) +
+                                ' cannot find the pic')
+        return
+
+    pic = pic_list[0]
+    current_app.logger.info('change_likes_of_pic find id=' + str(pic_id) +
+                            ' to change it num by ' + str(num) +
+                            ' the original is :' + str(pic.likes))
+    pic.likes = pic.likes + num
+    pic.save()
+
+
 def once_load_all():
     for str_tag in available_tags:
         for i in range(1, 21):
