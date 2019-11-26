@@ -66,7 +66,7 @@ class PictureRecommend(Resource):
     def get(self):
 
         # TODO: change it into recommend
-        pictures = randomly_get_pics()
+        pictures = randomly_get_pics(5)
 
         pictures_result = []
         for pic in pictures:
