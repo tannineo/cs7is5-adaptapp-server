@@ -159,7 +159,7 @@ def recommender(target_user_id):
     #     },
     # ]
 
-    #TODO: Call to recommender system
+    # TODO: Call recommender system
     recommended_picture_ids_list = []
     # recommended_picture_ids_list = RECOMMENDER(users_list, target_user_id)
     return recommended_picture_ids_list

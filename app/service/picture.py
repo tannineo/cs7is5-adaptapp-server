@@ -18,7 +18,6 @@ def randomly_get_pics(prefered_tags=[], num=20):
     pictures = []
 
     if len(prefered_tags) == 0:
-        # TODO: aggregate random
         pictures = Picture.objects().aggregate(*[
             {
                 '$sample': {
@@ -27,23 +26,30 @@ def randomly_get_pics(prefered_tags=[], num=20):
             },
         ])
     else:
-        for i in range(20):
-            key = random.choice(prefered_tags)
-            pictures.extend(Picture.objects().aggregate(*[
-                {
-                    '$match': {
-                        'tags': {
-                            '$eq': key
+        count_sum = 20
+        for i in range(0, len(prefered_tags)):
+            if i != len(prefered_tags) - 1:
+                cnt = random.randint(0, count_sum)
+            else:
+                cnt = count_sum
+            if cnt > 0:
+                pictures.extend(Picture.objects().aggregate(*[
+                    {
+                        '$match': {
+                            'tags': {
+                                '$eq': prefered_tags[i]
+                            }
                         }
-                    }
-                },
-                {
-                    '$sample': {
-                        'size': 1
-                    }
-                },
-            ]))
+                    },
+                    {
+                        '$sample': {
+                            'size': cnt
+                        }
+                    },
+                ]))
+                count_sum -= cnt
 
+    random.shuffle(pictures)
     return pictures
 
 

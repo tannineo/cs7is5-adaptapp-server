@@ -3,6 +3,7 @@ from flask_restplus import Namespace, Resource, fields
 from mongoengine.errors import ValidationError
 
 from service.user import recommender, user_like_a_pic
+from service.recommend import recommend_likes
 from service.picture import get_by_tag, upload, randomly_get_pics, once_load_all, change_likes_of_pic
 from .auth_decorator import login_required
 
@@ -88,18 +89,18 @@ class PictureRecommend(Resource):
     def get(self):
 
         # TODO: change it into recommend
-        pictures = randomly_get_pics(g.user.tags, 5)
+        pictures = recommend_likes(g.user)
 
         pictures_result = []
         for pic in pictures:
             # check if liked by the user
-            pic_id = str(pic['_id'])
+            pic_id = str(pic.id)
             pictures_result.append({
                 'id': pic_id,
-                'name': pic['name'],
-                'url': pic['img_url'],
+                'name': pic.name,
+                'url': pic.img_url,
                 'isLike': pic_id in g.user.likes,
-                'likes': pic['likes'],
+                'likes': pic.likes,
             })
 
         return {
@@ -161,7 +162,9 @@ class PictureUpload(Resource):
     @login_required()
     def post(self):
 
+        # test functions here
         # once_load_all()
+        # result = recommend_likes(g.user)
 
         # json = request.get_json()
         # """validate req data"""
